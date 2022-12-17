@@ -38,7 +38,6 @@ internal class ImageFilterView @JvmOverloads constructor(
     private val mTexRenderer: TextureRenderer = TextureRenderer()
     private var mImageWidth = 0
     private var mImageHeight = 0
-    private var mInitialized = false
     private var mCurrentEffect: PhotoFilter? = null
     private var mSourceBitmap: Bitmap? = null
     private var mCustomEffect: CustomEffect? = null
@@ -57,7 +56,6 @@ internal class ImageFilterView @JvmOverloads constructor(
             //mCurrentEffect = NONE;
         }*/
         mSourceBitmap = sourceBitmap
-        mInitialized = false
     }
 
     override fun onSurfaceCreated(gl: GL10, config: EGLConfig) {}
@@ -66,13 +64,9 @@ internal class ImageFilterView @JvmOverloads constructor(
     }
 
     override fun onDrawFrame(gl: GL10) {
-        if (!mInitialized) {
-            //Only need to do this once
-            mEffectContext = EffectContext.createWithCurrentGlContext()
-            mTexRenderer.init()
-            loadTextures()
-            mInitialized = true
-        }
+        mEffectContext = EffectContext.createWithCurrentGlContext()
+        mTexRenderer.init()
+        loadTextures()
         if (mCurrentEffect != PhotoFilter.NONE || mCustomEffect != null) {
             //if an effect is chosen initialize it and apply it to the texture
             initEffect()
